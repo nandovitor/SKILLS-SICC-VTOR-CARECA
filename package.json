@@ -8,7 +8,7 @@
   },
   "packageManager": "npm@11.11.0",
   "bin": {
-    "sicc-codex": "./bin/sicc-codex.js"
+    "sicc-codex": "bin/sicc-codex.js"
   },
   "main": "./src/index.js",
   "files": [
