@@ -5,6 +5,7 @@ const { runDoctor } = require("./doctor");
 
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "skills", "sicc-cadastrar-contrato");
 const MIN_NODE_MAJOR = 20;
+const DEFAULT_PACKAGE_SPEC = "sicc-codex-toolkit@latest";
 
 function resolveCodexHome(explicitCodexHome) {
   if (explicitCodexHome) return path.resolve(explicitCodexHome);
@@ -74,6 +75,35 @@ function ensureMcpServerConfig(configPath, serverName, url) {
   return configPath;
 }
 
+function ensureToolkitLaunchers(codexHome, packageSpec = DEFAULT_PACKAGE_SPEC) {
+  const binDir = path.join(codexHome, "bin");
+  const commandPath = path.join(binDir, "sicc-codex.cmd");
+  const shellPath = path.join(binDir, "sicc-codex");
+
+  const commandScript = [
+    "@echo off",
+    `npx --yes ${packageSpec} %*`,
+    "",
+  ].join("\r\n");
+
+  const shellScript = [
+    "#!/usr/bin/env sh",
+    `npx --yes ${packageSpec} "$@"`,
+    "",
+  ].join("\n");
+
+  fs.mkdirSync(binDir, { recursive: true });
+  fs.writeFileSync(commandPath, commandScript, "utf8");
+  fs.writeFileSync(shellPath, shellScript, "utf8");
+
+  return {
+    binDir,
+    commandPath,
+    shellPath,
+    packageSpec,
+  };
+}
+
 function installCodexIntegration(options = {}) {
   const nodeMajor = Number(String(process.version).replace(/^v(\d+).*$/, "$1"));
   if (!Number.isFinite(nodeMajor) || nodeMajor < MIN_NODE_MAJOR) {
@@ -83,8 +113,10 @@ function installCodexIntegration(options = {}) {
   const codexHome = resolveCodexHome(options.codexHome);
   const skillTargetDir = path.join(codexHome, "skills", "sicc-cadastrar-contrato");
   const configPath = path.join(codexHome, "config.toml");
+  const packageSpec = options.packageSpec || DEFAULT_PACKAGE_SPEC;
 
   copyDirectory(TEMPLATE_ROOT, skillTargetDir);
+  const launchers = ensureToolkitLaunchers(codexHome, packageSpec);
   ensureMcpServerConfig(configPath, options.serverName || "sicc", options.mcpUrl || "https://compras.app.br/mcp/documentos");
   const doctor = runDoctor({ codexHome });
 
@@ -93,6 +125,7 @@ function installCodexIntegration(options = {}) {
     codexHome,
     installedSkill: skillTargetDir,
     updatedConfig: configPath,
+    launcher: launchers,
     shellBootstrap: {
       check: [
         "node -v",
@@ -109,12 +142,18 @@ function installCodexIntegration(options = {}) {
         "node -v",
         "npm -v",
       ],
+      toolkit: [
+        launchers.commandPath,
+        `${launchers.commandPath} doctor`,
+        `${launchers.commandPath} draft-payload arquivo.pdf`,
+      ],
     },
     doctor,
     nextSteps: [
       "Reinicie o Codex se ele ja estava aberto.",
       "No shell do Codex em maquina nova, valide `node -v` e `npm -v` antes de usar o toolkit.",
-      "Rode `sicc-codex doctor` para validar Node, Codex e MCP.",
+      `Use o launcher em ${launchers.commandPath} para rodar o toolkit sem depender de install global.`,
+      "Rode `sicc-codex doctor` ou o launcher equivalente para validar Node, Codex e MCP.",
       "Use $sicc-cadastrar-contrato para cadastrar contratos via MCP.",
       "Use `sicc-codex draft-payload arquivo.pdf` para gerar um rascunho antes do cadastro.",
     ],

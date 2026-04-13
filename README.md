@@ -23,6 +23,14 @@ npm -v
 
 Se `node` nao existir, instale antes de continuar com `doctor` ou `setup`.
 
+Em maquina nova, o fluxo mais rapido e:
+
+```bash
+npx --yes sicc-codex-toolkit@latest setup
+```
+
+Isso instala a skill, registra o MCP e cria launchers em `CODEX_HOME/bin` para usar `sicc-codex` sem install global manual.
+
 Se estiver no Windows, o caminho mais tranquilo e:
 
 ```bash

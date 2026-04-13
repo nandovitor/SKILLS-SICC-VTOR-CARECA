@@ -9,16 +9,27 @@ description: Cadastro de contratos e atas no SICC via MCP, com foco em acertar n
 
 Executar o cadastro de contrato no SICC pelo MCP sem instalar dependencias durante a tarefa.
 
-Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o comando `sicc-codex draft-payload <arquivo>` para extrair texto e montar um rascunho de payload com campos detectados e pendencias explicitas.
+Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o launcher do toolkit para extrair texto e montar um rascunho de payload com campos detectados e pendencias explicitas.
+
+## Runner Canonico
+
+Em maquina com a skill instalada pelo `setup`, priorizar este launcher:
+
+- Windows: `CODEX_HOME/bin/sicc-codex.cmd`
+- Shell POSIX: `CODEX_HOME/bin/sicc-codex`
+
+Se o launcher ainda nao existir, usar fallback sem install global:
+
+- `npx --yes sicc-codex-toolkit@latest`
 
 ## Preflight de Instalacao
 
 Antes do primeiro uso em uma maquina nova:
 
 1. Garantir Node.js 20 ou superior.
-2. Instalar o toolkit e expor o comando `sicc-codex`.
-3. Rodar `sicc-codex doctor`.
-4. Rodar `sicc-codex setup`.
+2. Rodar `npx --yes sicc-codex-toolkit@latest setup` uma vez para instalar skill, launcher e MCP.
+3. Rodar o launcher `CODEX_HOME/bin/sicc-codex.cmd doctor` ou fallback `npx --yes sicc-codex-toolkit@latest doctor`.
+4. Seguir o fluxo do cadastro.
 
 No Windows, a instalacao recomendada do Node e:
 
@@ -55,7 +66,7 @@ Alternativa com `nvm`:
 ## Fluxo Obrigatorio
 
 1. Identificar se a entrada vem de texto direto ou documento.
-2. Se vier de documento, rodar `sicc-codex draft-payload <arquivo>`.
+2. Se vier de documento, rodar o launcher `sicc-codex draft-payload <arquivo>` ou fallback `npx --yes sicc-codex-toolkit@latest draft-payload <arquivo>`.
 3. Resolver `tenant_id` e IDs obrigatorios via MCP.
 4. Verificar duplicidade por numero do contrato, se houver.
 5. Montar ou completar o payload final.
@@ -63,6 +74,7 @@ Alternativa com `nvm`:
 
 ## Ferramentas e Comandos
 
+- `npx --yes sicc-codex-toolkit@latest setup`
 - `sicc-codex doctor`
 - `mcp__sicc__get_organizacoes_tool`
 - `mcp__sicc__search_contrato_by_numero_tool`
@@ -76,7 +88,8 @@ Alternativa com `nvm`:
 ## Regras
 
 - Nao instalar pacotes para esse fluxo no meio da tarefa.
-- Se o ambiente ainda nao estiver pronto, priorizar `sicc-codex doctor` e `sicc-codex setup`.
+- Se o ambiente ainda nao estiver pronto, priorizar `npx --yes sicc-codex-toolkit@latest setup`.
+- Se o comando `sicc-codex` nao existir, usar o launcher em `CODEX_HOME/bin` ou fallback `npx --yes sicc-codex-toolkit@latest`.
 - Se `node -v` falhar no shell do Codex, instalar Node antes de qualquer outro passo.
 - Nao inventar IDs; sempre resolver no MCP.
 - Nao deixar `unidades_participantes` vazio.
