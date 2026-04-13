@@ -10,7 +10,7 @@ const finalSchema = z.object({
     objeto_resumido_id: z.number().int(),
     tipo: z.string().min(1),
     unidade_gerenciadora_id: z.number().int(),
-    unidades_participantes: z.array(z.number().int()).min(1),
+    unidades_participantes: z.array(z.number().int()),
     valor: z.number(),
   }),
   fornecedor: z.object({
@@ -71,15 +71,17 @@ function buildDraftPayload(data) {
 
 function buildFinalPayload(input) {
   const parsed = finalSchema.parse(input);
+  const unidadesParticipantes = parsed.contrato_ata.unidades_participantes.length
+    ? parsed.contrato_ata.unidades_participantes
+    : [parsed.contrato_ata.unidade_gerenciadora_id];
+
   return {
     tenant_id: parsed.tenant_id,
     documentos: [
       {
         contrato_ata: {
           ...parsed.contrato_ata,
-          unidades_participantes: parsed.contrato_ata.unidades_participantes.length
-            ? parsed.contrato_ata.unidades_participantes
-            : [parsed.contrato_ata.unidade_gerenciadora_id],
+          unidades_participantes: unidadesParticipantes,
         },
         fornecedor: {
           ...parsed.fornecedor,
