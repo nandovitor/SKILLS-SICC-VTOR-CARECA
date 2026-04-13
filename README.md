@@ -71,6 +71,12 @@ Se voce tiver um contrato, ata ou ARP em PDF, DOCX, TXT ou MD, pode comecar assi
 sicc-codex draft-payload contrato.pdf
 ```
 
+Se quiser enxergar exatamente o que a normalizacao detectou antes de mexer nas heuristicas:
+
+```bash
+sicc-codex debug-normalize contrato.pdf
+```
+
 Isso gera um rascunho com bastante coisa preenchida e mostra o que ainda falta resolver no MCP, normalmente:
 
 - `tenant_id`

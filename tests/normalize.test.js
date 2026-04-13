@@ -5,6 +5,7 @@ const path = require("node:path");
 
 const {
   normalizeContractText,
+  debugContractText,
   normalizeDate,
   parseBrazilianMoney,
 } = require("../src/normalize");
@@ -81,4 +82,25 @@ test("encontra objeto e fornecedor mesmo quando faltam labels fortes", () => {
     "Secretaria de Governo",
   ]);
   assert.ok(result.normalized.unresolved.includes("licitacao.modalidade_nome"));
+});
+
+test("gera diagnostico estruturado da normalizacao", () => {
+  const result = debugContractText(readFixture("contrato-basico.txt"), {
+    sourceFile: "contrato-basico.txt",
+  });
+
+  assert.equal(result.sourceFile, "contrato-basico.txt");
+  assert.equal(result.summary.lines, 10);
+  assert.equal(result.summary.hasRequiredCoreFields, true);
+  assert.equal(result.detections.contrato_ata.numero.value, "123/2026");
+  assert.equal(result.detections.contrato_ata.numero.status, "detected");
+  assert.equal(result.detections.licitacao.modalidade_nome.value, "PREGAO ELETRONICO");
+  assert.deepEqual(result.detections.unidades.unidades_participantes_nomes.value, [
+    "SECRETARIA DE ADMINISTRACAO",
+  ]);
+  assert.equal(
+    result.normalizedPreview.fornecedor.razao_social,
+    "EMPRESA EXEMPLO LTDA"
+  );
+  assert.ok(result.unresolved.includes("tenant_id"));
 });

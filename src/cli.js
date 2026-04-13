@@ -4,7 +4,7 @@ const { Command } = require("commander");
 const { runDoctor } = require("./doctor");
 const { installCodexIntegration } = require("./install");
 const { extractTextFromFile } = require("./extractors");
-const { normalizeContractText } = require("./normalize");
+const { normalizeContractText, debugContractText } = require("./normalize");
 const { buildDraftPayload, buildFinalPayload } = require("./payload");
 
 function writeJsonOutput(data, outputPath) {
@@ -72,6 +72,17 @@ async function runCli(argv = process.argv) {
       const normalized = normalizeContractText(extracted.text, { sourceFile: extracted.filePath });
       const draft = buildDraftPayload(normalized);
       writeJsonOutput(draft, options.output);
+    });
+
+  program
+    .command("debug-normalize")
+    .description("Extrai e mostra um diagnostico detalhado da normalizacao do documento.")
+    .argument("<file>", "Arquivo PDF, DOCX, TXT ou MD")
+    .option("--output <file>", "Salvar JSON em arquivo")
+    .action(async (file, options) => {
+      const extracted = await extractTextFromFile(file);
+      const debug = debugContractText(extracted.text, { sourceFile: extracted.filePath });
+      writeJsonOutput(debug, options.output);
     });
 
   program

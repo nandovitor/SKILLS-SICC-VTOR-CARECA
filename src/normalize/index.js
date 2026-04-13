@@ -23,7 +23,7 @@ const {
   buildUnresolved,
 } = require("./builders");
 
-function normalizeContractText(rawText, metadata = {}) {
+function collectNormalizationState(rawText, metadata = {}) {
   const text = cleanText(rawText);
   const searchableText = normalizeForSearch(text);
   const entries = createLineEntries(text);
@@ -54,34 +54,140 @@ function normalizeContractText(rawText, metadata = {}) {
 
   return {
     sourceFile: metadata.sourceFile || null,
-    extractedText: text,
+    text,
+    entries,
+    detections: {
+      contractNumber,
+      licitationNumber,
+      processNumber,
+      signedDate,
+      validityDate,
+      cnpj,
+      objectText,
+      supplierName,
+      modality,
+      units,
+      totalValue,
+    },
+    hints,
+    unresolved,
+  };
+}
+
+function normalizeContractText(rawText, metadata = {}) {
+  const state = collectNormalizationState(rawText, metadata);
+
+  return {
+    sourceFile: state.sourceFile,
+    extractedText: state.text,
     normalized: {
       contrato_ata: {
-        data: signedDate,
-        data_validade: validityDate,
-        numero: contractNumber,
-        objeto: objectText,
+        data: state.detections.signedDate,
+        data_validade: state.detections.validityDate,
+        numero: state.detections.contractNumber,
+        objeto: state.detections.objectText,
         tipo: "CONTRATO",
-        valor: totalValue,
+        valor: state.detections.totalValue,
       },
       fornecedor: {
-        cnpj_cpf: cnpj ? cnpj.replace(/[^\d]/g, "") : null,
-        razao_social: supplierName,
+        cnpj_cpf: state.detections.cnpj ? state.detections.cnpj.replace(/[^\d]/g, "") : null,
+        razao_social: state.detections.supplierName,
       },
       licitacao: {
-        numero: licitationNumber,
-        numero_processo_adm: processNumber,
-        objeto: objectText,
+        numero: state.detections.licitationNumber,
+        numero_processo_adm: state.detections.processNumber,
+        objeto: state.detections.objectText,
       },
-      lotes: buildSingleLot(objectText, totalValue),
-      hints,
-      unresolved,
+      lotes: buildSingleLot(state.detections.objectText, state.detections.totalValue),
+      hints: state.hints,
+      unresolved: state.unresolved,
     },
+  };
+}
+
+function debugContractText(rawText, metadata = {}) {
+  const state = collectNormalizationState(rawText, metadata);
+  const normalizedResult = normalizeContractText(rawText, metadata);
+
+  return {
+    sourceFile: state.sourceFile,
+    summary: {
+      lines: state.entries.length,
+      unresolvedCount: state.unresolved.length,
+      hasRequiredCoreFields: Boolean(
+        state.detections.contractNumber &&
+        state.detections.objectText &&
+        state.detections.supplierName &&
+        state.detections.cnpj
+      ),
+    },
+    detections: {
+      contrato_ata: {
+        numero: {
+          value: state.detections.contractNumber,
+          status: state.detections.contractNumber ? "detected" : "missing",
+        },
+        data: {
+          value: state.detections.signedDate,
+          status: state.detections.signedDate ? "detected" : "missing",
+        },
+        data_validade: {
+          value: state.detections.validityDate,
+          status: state.detections.validityDate ? "detected" : "missing",
+        },
+        objeto: {
+          value: state.detections.objectText,
+          status: state.detections.objectText ? "detected" : "missing",
+        },
+        valor: {
+          value: state.detections.totalValue,
+          status: Number.isFinite(state.detections.totalValue) ? "detected" : "missing",
+        },
+      },
+      fornecedor: {
+        cnpj_cpf: {
+          value: state.detections.cnpj ? state.detections.cnpj.replace(/[^\d]/g, "") : null,
+          status: state.detections.cnpj ? "detected" : "missing",
+        },
+        razao_social: {
+          value: state.detections.supplierName,
+          status: state.detections.supplierName ? "detected" : "missing",
+        },
+      },
+      licitacao: {
+        numero: {
+          value: state.detections.licitationNumber,
+          status: state.detections.licitationNumber ? "detected" : "missing",
+        },
+        numero_processo_adm: {
+          value: state.detections.processNumber,
+          status: state.detections.processNumber ? "detected" : "missing",
+        },
+        modalidade_nome: {
+          value: state.detections.modality,
+          status: state.detections.modality ? "detected" : "missing",
+        },
+      },
+      unidades: {
+        unidade_gerenciadora_nome: {
+          value: state.detections.units.primary,
+          status: state.detections.units.primary ? "detected" : "missing",
+        },
+        unidades_participantes_nomes: {
+          value: state.detections.units.participants,
+          status: state.detections.units.participants.length ? "detected" : "missing",
+        },
+      },
+    },
+    hints: state.hints,
+    unresolved: state.unresolved,
+    normalizedPreview: normalizedResult.normalized,
   };
 }
 
 module.exports = {
   normalizeContractText,
+  debugContractText,
   normalizeDate,
   parseBrazilianMoney,
 };
