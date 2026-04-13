@@ -1,8 +1,10 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const { runDoctor } = require("./doctor");
 
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "skills", "sicc-cadastrar-contrato");
+const MIN_NODE_MAJOR = 20;
 
 function resolveCodexHome(explicitCodexHome) {
   if (explicitCodexHome) return path.resolve(explicitCodexHome);
@@ -73,20 +75,28 @@ function ensureMcpServerConfig(configPath, serverName, url) {
 }
 
 function installCodexIntegration(options = {}) {
+  const nodeMajor = Number(String(process.version).replace(/^v(\d+).*$/, "$1"));
+  if (!Number.isFinite(nodeMajor) || nodeMajor < MIN_NODE_MAJOR) {
+    throw new Error(`Node.js ${MIN_NODE_MAJOR}+ e obrigatorio. Versao atual: ${process.version}`);
+  }
+
   const codexHome = resolveCodexHome(options.codexHome);
   const skillTargetDir = path.join(codexHome, "skills", "sicc-cadastrar-contrato");
   const configPath = path.join(codexHome, "config.toml");
 
   copyDirectory(TEMPLATE_ROOT, skillTargetDir);
   ensureMcpServerConfig(configPath, options.serverName || "sicc", options.mcpUrl || "https://compras.app.br/mcp/documentos");
+  const doctor = runDoctor({ codexHome });
 
   return {
-    ok: true,
+    ok: doctor.ok,
     codexHome,
     installedSkill: skillTargetDir,
     updatedConfig: configPath,
+    doctor,
     nextSteps: [
       "Reinicie o Codex se ele ja estava aberto.",
+      "Rode `sicc-codex doctor` para validar Node, Codex e MCP.",
       "Use $sicc-cadastrar-contrato para cadastrar contratos via MCP.",
       "Use `sicc-codex draft-payload arquivo.pdf` para gerar um rascunho antes do cadastro.",
     ],

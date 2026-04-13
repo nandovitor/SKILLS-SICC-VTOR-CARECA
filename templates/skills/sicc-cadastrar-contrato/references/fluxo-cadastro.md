@@ -2,11 +2,13 @@
 
 ## Roteiro
 
-1. Se houver arquivo, gerar rascunho com `sicc-codex draft-payload`.
-2. Descobrir `tenant_id`.
-3. Verificar duplicidade por numero.
-4. Resolver `objeto_resumido_id`, unidade e modalidade.
-5. Enviar o payload pelo MCP.
+1. Rodar `sicc-codex doctor` em maquina nova ou ambiente suspeito.
+2. Se necessario, rodar `sicc-codex setup`.
+3. Se houver arquivo, gerar rascunho com `sicc-codex draft-payload`.
+4. Descobrir `tenant_id`.
+5. Verificar duplicidade por numero.
+6. Resolver `objeto_resumido_id`, unidade e modalidade.
+7. Enviar o payload pelo MCP.
 
 ## Rascunho do Documento
 

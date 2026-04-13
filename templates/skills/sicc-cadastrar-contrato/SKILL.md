@@ -11,6 +11,24 @@ Executar o cadastro de contrato no SICC pelo MCP sem instalar dependencias duran
 
 Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o comando `sicc-codex draft-payload <arquivo>` para extrair texto e montar um rascunho de payload com campos detectados e pendencias explicitas.
 
+## Preflight de Instalacao
+
+Antes do primeiro uso em uma maquina nova:
+
+1. Garantir Node.js 20 ou superior.
+2. Instalar o toolkit e expor o comando `sicc-codex`.
+3. Rodar `sicc-codex doctor`.
+4. Rodar `sicc-codex setup`.
+
+No Windows, a instalacao recomendada do Node e:
+
+- `winget install OpenJS.NodeJS.LTS`
+
+Se usar `nvm`:
+
+- `nvm install 24`
+- `nvm use 24`
+
 ## Fluxo Obrigatorio
 
 1. Identificar se a entrada vem de texto direto ou documento.
@@ -22,6 +40,7 @@ Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o comando `sicc-codex draft-
 
 ## Ferramentas e Comandos
 
+- `sicc-codex doctor`
 - `mcp__sicc__get_organizacoes_tool`
 - `mcp__sicc__search_contrato_by_numero_tool`
 - `mcp__sicc__get_objeto_resumido_tool`
@@ -34,6 +53,7 @@ Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o comando `sicc-codex draft-
 ## Regras
 
 - Nao instalar pacotes para esse fluxo no meio da tarefa.
+- Se o ambiente ainda nao estiver pronto, priorizar `sicc-codex doctor` e `sicc-codex setup`.
 - Nao inventar IDs; sempre resolver no MCP.
 - Nao deixar `unidades_participantes` vazio.
 - Nao trocar o objeto do documento por resumo generico.
@@ -49,4 +69,5 @@ Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o comando `sicc-codex draft-
 ## Recursos
 
 - Ler [fluxo-cadastro](references/fluxo-cadastro.md).
+- Ler [instalacao](references/instalacao.md).
 - Ler [payloads](references/payloads.md).

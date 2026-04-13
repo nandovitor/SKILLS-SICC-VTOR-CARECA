@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { Command } = require("commander");
+const { runDoctor } = require("./doctor");
 const { installCodexIntegration } = require("./install");
 const { extractTextFromFile } = require("./extractors");
 const { normalizeContractText } = require("./normalize");
@@ -25,6 +26,19 @@ async function runCli(argv = process.argv) {
     .version("0.1.0");
 
   program
+    .command("doctor")
+    .description("Valida Node, CODEX_HOME, config.toml e registro do MCP SICC.")
+    .option("--codex-home <path>", "Diretorio base do Codex")
+    .option("--output <file>", "Salvar JSON em arquivo")
+    .action((options) => {
+      const result = runDoctor(options);
+      writeJsonOutput(result, options.output);
+      if (!result.ok) {
+        process.exitCode = 1;
+      }
+    });
+
+  program
     .command("setup")
     .description("Instala a skill no CODEX_HOME/.codex e registra o MCP SICC no config.toml.")
     .option("--codex-home <path>", "Diretorio base do Codex")
@@ -33,6 +47,9 @@ async function runCli(argv = process.argv) {
     .action((options) => {
       const result = installCodexIntegration(options);
       writeJsonOutput(result);
+      if (!result.ok) {
+        process.exitCode = 1;
+      }
     });
 
   program
