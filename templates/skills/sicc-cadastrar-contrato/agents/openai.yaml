@@ -1,0 +1,7 @@
+interface:
+  display_name: "SICC Contrato"
+  short_description: "Cadastro de contrato no SICC via MCP"
+  default_prompt: "Use $sicc-cadastrar-contrato para cadastrar um contrato no SICC com prechecagens, IDs corretos e payload valido."
+
+policy:
+  allow_implicit_invocation: true
