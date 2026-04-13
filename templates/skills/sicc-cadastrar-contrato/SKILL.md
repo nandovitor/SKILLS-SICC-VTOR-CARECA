@@ -29,6 +29,29 @@ Se usar `nvm`:
 - `nvm install 24`
 - `nvm use 24`
 
+## Preflight no Shell do Codex
+
+Antes de usar qualquer comando do toolkit em uma maquina nova, o agente deve validar o ambiente no shell do Codex nesta ordem:
+
+1. Rodar `node -v`.
+2. Se `node` nao existir ou vier abaixo da versao 20, instalar Node antes de continuar.
+3. Rodar `npm -v`.
+4. So depois seguir para `sicc-codex doctor` e `sicc-codex setup`.
+
+Bootstrap recomendado no Windows dentro do shell do Codex:
+
+- `winget install OpenJS.NodeJS.LTS`
+- fechar e abrir o shell novamente
+- `node -v`
+- `npm -v`
+
+Alternativa com `nvm`:
+
+- `nvm install 24`
+- `nvm use 24`
+- `node -v`
+- `npm -v`
+
 ## Fluxo Obrigatorio
 
 1. Identificar se a entrada vem de texto direto ou documento.
@@ -54,6 +77,7 @@ Se usar `nvm`:
 
 - Nao instalar pacotes para esse fluxo no meio da tarefa.
 - Se o ambiente ainda nao estiver pronto, priorizar `sicc-codex doctor` e `sicc-codex setup`.
+- Se `node -v` falhar no shell do Codex, instalar Node antes de qualquer outro passo.
 - Nao inventar IDs; sempre resolver no MCP.
 - Nao deixar `unidades_participantes` vazio.
 - Nao trocar o objeto do documento por resumo generico.

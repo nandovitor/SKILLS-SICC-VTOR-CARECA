@@ -93,9 +93,27 @@ function installCodexIntegration(options = {}) {
     codexHome,
     installedSkill: skillTargetDir,
     updatedConfig: configPath,
+    shellBootstrap: {
+      check: [
+        "node -v",
+        "npm -v",
+      ],
+      windows: [
+        "winget install OpenJS.NodeJS.LTS",
+        "node -v",
+        "npm -v",
+      ],
+      windowsNvm: [
+        "nvm install 24",
+        "nvm use 24",
+        "node -v",
+        "npm -v",
+      ],
+    },
     doctor,
     nextSteps: [
       "Reinicie o Codex se ele ja estava aberto.",
+      "No shell do Codex em maquina nova, valide `node -v` e `npm -v` antes de usar o toolkit.",
       "Rode `sicc-codex doctor` para validar Node, Codex e MCP.",
       "Use $sicc-cadastrar-contrato para cadastrar contratos via MCP.",
       "Use `sicc-codex draft-payload arquivo.pdf` para gerar um rascunho antes do cadastro.",

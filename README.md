@@ -14,6 +14,15 @@ A ideia aqui e simples: parar de perder tempo toda vez montando tudo do zero, in
 
 Voce vai precisar de Node.js 20 ou superior.
 
+Em qualquer computador novo, a validacao deve acontecer primeiro no shell do Codex:
+
+```bash
+node -v
+npm -v
+```
+
+Se `node` nao existir, instale antes de continuar com `doctor` ou `setup`.
+
 Se estiver no Windows, o caminho mais tranquilo e:
 
 ```bash
