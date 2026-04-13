@@ -33,6 +33,17 @@
   ],
   "author": "Fernando Suporte",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nandovitor/SKILLS-SICC-VTOR-CARECA.git"
+  },
+  "homepage": "https://github.com/nandovitor/SKILLS-SICC-VTOR-CARECA#readme",
+  "bugs": {
+    "url": "https://github.com/nandovitor/SKILLS-SICC-VTOR-CARECA/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "commander": "^14.0.1",
     "mammoth": "^1.11.0",
