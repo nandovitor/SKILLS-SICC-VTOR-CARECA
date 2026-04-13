@@ -84,3 +84,26 @@ test("erro de .doc sem helper orienta bootstrap python", async () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
 });
+
+test("usa helper externo para extrair .xlsx", async () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "sicc-xlsx-"));
+  const filePath = path.join(tempDir, "planilha.xlsx");
+  const fakeHelper = path.join(__dirname, "helpers", "fake_python_helper.js");
+
+  try {
+    fs.writeFileSync(filePath, "binario-xlsx", "utf8");
+
+    const result = await withEnv(
+      {
+        SICC_CODEX_PYTHON_BIN: "node",
+        SICC_CODEX_PYTHON_HELPER: fakeHelper,
+      },
+      () => extractTextFromFile(filePath)
+    );
+
+    assert.equal(result.extension, ".xlsx");
+    assert.match(result.text, /\[sheet\] Planilha/);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+});

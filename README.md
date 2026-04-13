@@ -41,6 +41,8 @@ O bootstrap Python instala as libs que o agente pode usar no shell do Codex para
 
 - `pypdf`
 - `python-docx`
+- `openpyxl`
+- `xlrd`
 - `pywin32` no Windows
 - `textract` quando aplicavel
 

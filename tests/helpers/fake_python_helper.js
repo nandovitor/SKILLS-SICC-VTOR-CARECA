@@ -14,6 +14,15 @@ if (extension === ".doc") {
   process.exit(0);
 }
 
+if (extension === ".xls" || extension === ".xlsx") {
+  process.stdout.write(JSON.stringify({
+    ok: true,
+    engine: "fake-python-excel",
+    text: "[sheet] Planilha\nnumero | descricao | valor\n1 | item de planilha | 1000",
+  }));
+  process.exit(0);
+}
+
 process.stdout.write(JSON.stringify({
   ok: false,
   error: "Formato nao tratado pelo helper fake.",

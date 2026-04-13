@@ -22,6 +22,23 @@ Se o launcher ainda nao existir, usar fallback sem install global:
 
 - `npx --yes sicc-codex-toolkit@latest`
 
+## Sub-agentes de Extracao
+
+Organizacao recomendada para a skill:
+
+- `.pdf`: ler [pdf-specialist](agents/pdf-specialist.md)
+- `.doc`: ler [doc-specialist](agents/doc-specialist.md)
+- `.docx`: ler [docx-specialist](agents/docx-specialist.md)
+- `.xls`: ler [xls-specialist](agents/xls-specialist.md)
+- `.xlsx`: ler [xlsx-specialist](agents/xlsx-specialist.md)
+
+Regra pratica:
+
+1. identificar a extensao
+2. acionar o especialista do formato
+3. usar Python como caminho principal para extracao robusta
+4. so depois seguir para normalizacao e cadastro
+
 ## Preflight de Instalacao
 
 Antes do primeiro uso em uma maquina nova:
@@ -67,7 +84,7 @@ Alternativa com `nvm`:
 ## Fluxo Obrigatorio
 
 1. Identificar se a entrada vem de texto direto ou documento.
-2. Se vier de documento, rodar o launcher `sicc-codex draft-payload <arquivo>` ou fallback `npx --yes sicc-codex-toolkit@latest draft-payload <arquivo>`.
+2. Se vier de documento, escolher o especialista do formato e rodar o launcher `sicc-codex draft-payload <arquivo>` ou fallback `npx --yes sicc-codex-toolkit@latest draft-payload <arquivo>`.
 3. Resolver `tenant_id` e IDs obrigatorios via MCP.
 4. Verificar duplicidade por numero do contrato, se houver.
 5. Montar ou completar o payload final.

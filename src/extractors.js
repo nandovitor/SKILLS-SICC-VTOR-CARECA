@@ -128,6 +128,18 @@ function extractTextFromAntiword(filePath) {
   };
 }
 
+async function extractTextFromExcel(filePath, options = {}) {
+  const pythonResult = runPythonHelper(filePath, options.python);
+  if (pythonResult.ok) return pythonResult.text;
+
+  throw new Error(
+    [
+      "Nao foi possivel extrair planilha com os extratores disponiveis.",
+      "Para maquina nova, rode `sicc-codex bootstrap-python` para preparar XLS/XLSX.",
+    ].join(" ")
+  );
+}
+
 async function extractTextFromPdf(filePath, options = {}) {
   const pythonResult = runPythonHelper(filePath, options.python);
   if (pythonResult.ok) return pythonResult.text;
@@ -172,6 +184,8 @@ async function extractTextFromFile(inputPath, options = {}) {
     text = await extractTextFromDocx(filePath, options);
   } else if (extension === ".doc") {
     text = await extractTextFromDoc(filePath, options);
+  } else if (extension === ".xls" || extension === ".xlsx") {
+    text = await extractTextFromExcel(filePath, options);
   } else if (extension === ".txt" || extension === ".md" || extension === ".json") {
     text = fs.readFileSync(filePath, "utf8");
   } else {
@@ -236,6 +250,8 @@ function bootstrapPythonExtractors(options = {}) {
     installedPackages: [
       "pypdf",
       "python-docx",
+      "openpyxl",
+      "xlrd",
       "pywin32 (Windows)",
       "textract (opcional para .doc)",
     ],
@@ -247,6 +263,7 @@ module.exports = {
   extractTextFromPdf,
   extractTextFromDocx,
   extractTextFromDoc,
+  extractTextFromExcel,
   bootstrapPythonExtractors,
   resolvePythonCommand,
 };
