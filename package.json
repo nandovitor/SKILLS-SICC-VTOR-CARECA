@@ -1,6 +1,6 @@
 {
   "name": "sicc-codex-toolkit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "CLI para instalar a skill do SICC no Codex, configurar o MCP e transformar PDF/DOCX em payload de cadastro.",
   "type": "commonjs",
   "engines": {
