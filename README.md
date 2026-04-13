@@ -43,6 +43,20 @@ npm install
 npm link
 ```
 
+## Abrindo no VS Code
+
+Para evitar confusao com a pasta pai `Skill`, abra este repo pelo arquivo:
+
+```bash
+SKILLS-SICC-VTOR-CARECA.code-workspace
+```
+
+Ou abra diretamente a pasta:
+
+```bash
+C:\Users\Fernando Suporte\Documents\Skill\SKILLS-SICC-VTOR-CARECA
+```
+
 Para validar o pacote antes de mexer em feature:
 
 ```bash
