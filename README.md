@@ -1,5 +1,7 @@
 # SKILLS-SICC-VTOR-CARECA
 
+Criado por Fernando Luiz.
+
 Esse repo junta o que precisa para deixar o fluxo do SICC mais redondo no Codex.
 
 A ideia aqui e simples: parar de perder tempo toda vez montando tudo do zero, instalando dependencia no meio da tarefa ou tentando adivinhar payload. O pacote instala a skill, configura o MCP e ainda ajuda a ler PDF ou DOCX para transformar o documento em um rascunho de cadastro.
@@ -29,7 +31,7 @@ Em maquina nova, o fluxo mais rapido e:
 npx --yes sicc-codex-toolkit@latest setup
 ```
 
-Isso instala a skill, registra o MCP e cria launchers em `CODEX_HOME/bin` para usar `sicc-codex` sem install global manual.
+O `setup` agora mostra `Skill Criada Por Fernando Luiz`, instala a skill, registra o MCP, copia um toolkit local para `CODEX_HOME/toolkits/sicc-codex-toolkit` e cria launchers em `CODEX_HOME/bin` para usar `sicc-codex` ja na primeira instalacao.
 
 Para extracao robusta de documentos, especialmente `.pdf` e `.doc`, rode tambem:
 
@@ -157,6 +159,8 @@ Depois do `setup`, o esperado e:
 
 - a skill estar em `CODEX_HOME/skills/sicc-cadastrar-contrato`
 - o MCP SICC estar registrado em `CODEX_HOME/config.toml`
+- o toolkit local estar em `CODEX_HOME/toolkits/sicc-codex-toolkit`
+- o comando `sicc-codex` funcionar pelo launcher local mesmo antes de qualquer install global
 - o Codex conseguir usar `$sicc-cadastrar-contrato` direto
 
 ## O que deixa isso mais confiavel

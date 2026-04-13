@@ -2,10 +2,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { Command } = require("commander");
 const { runDoctor } = require("./doctor");
-const { installCodexIntegration } = require("./install");
+const { installCodexIntegration, CREATOR_NAME } = require("./install");
 const { extractTextFromFile, bootstrapPythonExtractors } = require("./extractors");
 const { normalizeContractText, debugContractText } = require("./normalize");
 const { buildDraftPayload, buildFinalPayload } = require("./payload");
+
+const packageJson = require("../package.json");
 
 function writeJsonOutput(data, outputPath) {
   const text = `${JSON.stringify(data, null, 2)}\n`;
@@ -23,7 +25,7 @@ async function runCli(argv = process.argv) {
   program
     .name("sicc-codex")
     .description("Instala a skill do SICC no Codex e transforma documentos em payload de cadastro.")
-    .version("0.1.0");
+    .version(packageJson.version);
 
   program
     .command("doctor")
@@ -46,6 +48,7 @@ async function runCli(argv = process.argv) {
     .option("--server-name <name>", "Nome do servidor MCP no config", "sicc")
     .option("--prepare-python", "Tenta preparar as dependencias Python para extracao robusta")
     .action((options) => {
+      process.stdout.write(`Skill Criada Por ${CREATOR_NAME}\n`);
       const result = installCodexIntegration(options);
       writeJsonOutput(result);
       if (!result.ok) {

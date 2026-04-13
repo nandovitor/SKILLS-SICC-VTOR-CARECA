@@ -42,7 +42,9 @@ nvm use 24
 
 - `node -v` deve mostrar Node 20+
 - `npm -v` deve responder normalmente
+- o setup deve exibir `Skill Criada Por Fernando Luiz`
 - `CODEX_HOME/bin/sicc-codex.cmd` ou `CODEX_HOME/bin/sicc-codex` deve existir
+- `CODEX_HOME/toolkits/sicc-codex-toolkit/bin/sicc-codex.js` deve existir
 - `sicc-codex bootstrap-python` deve concluir com `ok: true`
 - `sicc-codex doctor` deve retornar `ok: true`
 - `CODEX_HOME/config.toml` deve conter `[mcp_servers.sicc]`

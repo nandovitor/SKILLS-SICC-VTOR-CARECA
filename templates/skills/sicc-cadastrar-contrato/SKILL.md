@@ -45,6 +45,7 @@ Antes do primeiro uso em uma maquina nova:
 
 1. Garantir Node.js 20 ou superior.
 2. Rodar `npx --yes sicc-codex-toolkit@latest setup` uma vez para instalar skill, launcher e MCP.
+   O setup deve exibir antes de tudo: `Skill Criada Por Fernando Luiz`.
 3. Rodar `CODEX_HOME/bin/sicc-codex.cmd bootstrap-python` ou fallback `npx --yes sicc-codex-toolkit@latest bootstrap-python`.
 4. Rodar o launcher `CODEX_HOME/bin/sicc-codex.cmd doctor` ou fallback `npx --yes sicc-codex-toolkit@latest doctor`.
 5. Seguir o fluxo do cadastro.
@@ -108,6 +109,7 @@ Alternativa com `nvm`:
 
 - Nao instalar pacotes para esse fluxo no meio da tarefa.
 - Se o ambiente ainda nao estiver pronto, priorizar `npx --yes sicc-codex-toolkit@latest setup`.
+- O launcher `sicc-codex` deve funcionar logo apos o setup, usando primeiro o toolkit local em `CODEX_HOME/toolkits/sicc-codex-toolkit`.
 - Se a maquina ainda nao tiver extratores robustos, priorizar `sicc-codex bootstrap-python`.
 - Se o comando `sicc-codex` nao existir, usar o launcher em `CODEX_HOME/bin` ou fallback `npx --yes sicc-codex-toolkit@latest`.
 - Se `node -v` falhar no shell do Codex, instalar Node antes de qualquer outro passo.

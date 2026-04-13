@@ -7,6 +7,7 @@ const { bootstrapPythonExtractors } = require("./extractors");
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "skills", "sicc-cadastrar-contrato");
 const MIN_NODE_MAJOR = 20;
 const DEFAULT_PACKAGE_SPEC = "sicc-codex-toolkit@latest";
+const CREATOR_NAME = "Fernando Luiz";
 
 function resolveCodexHome(explicitCodexHome) {
   if (explicitCodexHome) return path.resolve(explicitCodexHome);
@@ -80,16 +81,48 @@ function ensureToolkitLaunchers(codexHome, packageSpec = DEFAULT_PACKAGE_SPEC) {
   const binDir = path.join(codexHome, "bin");
   const commandPath = path.join(binDir, "sicc-codex.cmd");
   const shellPath = path.join(binDir, "sicc-codex");
+  const localToolkitRoot = path.join(codexHome, "toolkits", "sicc-codex-toolkit");
+  const localEntryPoint = path.join(localToolkitRoot, "bin", "sicc-codex.js");
+  const localEntryPointWindows = localEntryPoint.replace(/\//g, "\\");
+
+  copyDirectory(path.resolve(__dirname, "..", "bin"), path.join(localToolkitRoot, "bin"));
+  copyDirectory(path.resolve(__dirname), path.join(localToolkitRoot, "src"));
+  fs.copyFileSync(
+    path.resolve(__dirname, "..", "package.json"),
+    path.join(localToolkitRoot, "package.json"),
+  );
+  fs.copyFileSync(
+    path.resolve(__dirname, "..", "README.md"),
+    path.join(localToolkitRoot, "README.md"),
+  );
+  const requirementsPath = path.resolve(__dirname, "..", "requirements-extractors.txt");
+  if (fs.existsSync(requirementsPath)) {
+    fs.copyFileSync(
+      requirementsPath,
+      path.join(localToolkitRoot, "requirements-extractors.txt"),
+    );
+  }
+  copyDirectory(path.resolve(__dirname, "..", "templates"), path.join(localToolkitRoot, "templates"));
 
   const commandScript = [
     "@echo off",
-    `npx --yes ${packageSpec} %*`,
+    `set "SICC_CODEX_LOCAL=${localEntryPointWindows}"`,
+    "if exist \"%SICC_CODEX_LOCAL%\" (",
+    "  node \"%SICC_CODEX_LOCAL%\" %*",
+    ") else (",
+    `  npx --yes ${packageSpec} %*`,
+    ")",
     "",
   ].join("\r\n");
 
   const shellScript = [
     "#!/usr/bin/env sh",
-    `npx --yes ${packageSpec} "$@"`,
+    `SICC_CODEX_LOCAL="${localEntryPoint}"`,
+    "if [ -f \"$SICC_CODEX_LOCAL\" ]; then",
+    "  node \"$SICC_CODEX_LOCAL\" \"$@\"",
+    "else",
+    `  npx --yes ${packageSpec} "$@"`,
+    "fi",
     "",
   ].join("\n");
 
@@ -101,6 +134,8 @@ function ensureToolkitLaunchers(codexHome, packageSpec = DEFAULT_PACKAGE_SPEC) {
     binDir,
     commandPath,
     shellPath,
+    localToolkitRoot,
+    localEntryPoint,
     packageSpec,
   };
 }
@@ -124,6 +159,7 @@ function installCodexIntegration(options = {}) {
 
   return {
     ok: doctor.ok,
+    createdBy: CREATOR_NAME,
     codexHome,
     installedSkill: skillTargetDir,
     updatedConfig: configPath,
@@ -168,6 +204,7 @@ function installCodexIntegration(options = {}) {
 }
 
 module.exports = {
+  CREATOR_NAME,
   installCodexIntegration,
   resolveCodexHome,
 };
