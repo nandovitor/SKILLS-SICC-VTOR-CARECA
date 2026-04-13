@@ -18,8 +18,11 @@
     "README.md"
   ],
   "scripts": {
+    "test": "node --test tests/*.test.js",
     "smoke": "node ./bin/sicc-codex.js --help",
-    "doctor": "node ./bin/sicc-codex.js doctor"
+    "doctor": "node ./bin/sicc-codex.js doctor",
+    "pack:check": "npm pack --dry-run",
+    "verify": "npm run test && npm run smoke && npm run pack:check"
   },
   "keywords": [
     "sicc",

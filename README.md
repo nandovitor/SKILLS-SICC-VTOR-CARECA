@@ -43,6 +43,12 @@ npm install
 npm link
 ```
 
+Para validar o pacote antes de mexer em feature:
+
+```bash
+npm run verify
+```
+
 Depois disso, roda:
 
 ```bash
@@ -107,3 +113,13 @@ Depois do `setup`, o esperado e:
 - `.nvmrc` pra fixar a versao recomendada
 - `sicc-codex doctor` pra checar ambiente antes de usar
 - `setup` que reinstala a skill e corrige a config do MCP se precisar
+- `.gitignore` e `.gitattributes` alinhados com o fluxo Node do repo
+- `npm run verify` para smoke test e checagem de empacotamento
+
+## Ponto de Partida Para Evoluir
+
+Hoje o repo esta pronto para trabalhar em cima de tres frentes:
+
+- melhorar as heuristicas de extracao em `src/normalize.js`
+- adicionar novos comandos ao CLI em `src/cli.js`
+- reforcar validacao, empacotamento e testes para publicar com mais seguranca
