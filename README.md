@@ -1,70 +1,71 @@
 # SKILLS-SICC-VTOR-CARECA
 
-Toolkit Node para o fluxo de cadastro de contratos no SICC com Codex e MCP.
+Esse repo junta o que precisa para deixar o fluxo do SICC mais redondo no Codex.
 
-Ele resolve duas partes:
+A ideia aqui e simples: parar de perder tempo toda vez montando tudo do zero, instalando dependencia no meio da tarefa ou tentando adivinhar payload. O pacote instala a skill, configura o MCP e ainda ajuda a ler PDF ou DOCX para transformar o documento em um rascunho de cadastro.
 
-1. Instalar a skill `sicc-cadastrar-contrato` no Codex e registrar o MCP SICC no `config.toml`
-2. Extrair PDF, DOCX, TXT ou MD e transformar o documento em rascunho de payload para cadastro
+## O que tem aqui
 
-## Estrutura
+- `bin/`: o comando `sicc-codex`
+- `src/`: a logica de extracao, normalizacao, validacao e montagem do payload
+- `templates/skills/sicc-cadastrar-contrato/`: a skill pronta para o Codex instalar
 
-- `bin/`: comando executavel `sicc-codex`
-- `src/`: CLI, extracao, normalizacao, validacao e montagem do payload
-- `templates/skills/sicc-cadastrar-contrato/`: skill pronta para ser instalada no Codex
+## Antes de tudo
 
-## Instalacao completa e robusta
+Voce vai precisar de Node.js 20 ou superior.
 
-### 1. Instalar Node.js
-
-Requisito minimo: Node.js 20 ou superior.
-
-Windows com `winget`:
+Se estiver no Windows, o caminho mais tranquilo e:
 
 ```bash
 winget install OpenJS.NodeJS.LTS
 ```
 
-Se voce usa `nvm`:
+Se voce curte `nvm`, tambem funciona:
 
 ```bash
 nvm install 24
 nvm use 24
 ```
 
-Validar:
+Pra checar:
 
 ```bash
 node -v
 npm -v
 ```
 
-### 2. Instalar o toolkit
+## Instalando localmente
+
+Dentro do repo:
 
 ```bash
 npm install
 npm link
 ```
 
-### 3. Validar ambiente
+Depois disso, roda:
 
 ```bash
 sicc-codex doctor
 ```
 
-### 4. Instalar skill e MCP
+Se estiver tudo certo, manda:
 
 ```bash
 sicc-codex setup
 ```
 
-### 5. Fluxo rapido para contrato ou ARP
+Esse comando instala a skill no Codex e garante que o MCP do SICC fique no `config.toml`.
+
+## Fluxo rapido
+
+Se voce tiver um contrato, ata ou ARP em PDF, DOCX, TXT ou MD, pode comecar assim:
 
 ```bash
 sicc-codex draft-payload contrato.pdf
 ```
 
-Resolver no MCP:
+Isso gera um rascunho com bastante coisa preenchida e mostra o que ainda falta resolver no MCP, normalmente:
 
 - `tenant_id`
 - `objeto_resumido_id`
@@ -72,46 +73,37 @@ Resolver no MCP:
 - `unidades_participantes`
 - `modalidade_id`
 
-Fechar o payload:
+Depois que esses IDs estiverem certos, fecha o payload final com:
 
 ```bash
 sicc-codex build-payload --input contrato-normalizado.json
 ```
 
-## Uso local
+## Em outra maquina
 
-```bash
-sicc-codex doctor
-sicc-codex setup
-sicc-codex draft-payload contrato.pdf
-sicc-codex build-payload --input contrato-normalizado.json
-```
-
-## Uso em outro computador
-
-Enquanto o pacote nao estiver publicado no npm, voce pode instalar direto do GitHub:
+Enquanto nao estiver publicado no npm, da pra usar direto pelo GitHub:
 
 ```bash
 npx github:nandovitor/SKILLS-SICC-VTOR-CARECA setup
 ```
 
-Depois de publicar no npm, o ideal fica:
+Quando publicar no npm, fica ainda mais facil:
 
 ```bash
 npx sicc-codex-toolkit setup
 ```
 
-## Resultado esperado
+## O que esperar no final
 
-Depois do `setup`:
+Depois do `setup`, o esperado e:
 
-- a skill fica instalada em `CODEX_HOME/skills/sicc-cadastrar-contrato`
-- o MCP SICC fica registrado em `CODEX_HOME/config.toml`
-- o Codex passa a poder usar `$sicc-cadastrar-contrato` diretamente
+- a skill estar em `CODEX_HOME/skills/sicc-cadastrar-contrato`
+- o MCP SICC estar registrado em `CODEX_HOME/config.toml`
+- o Codex conseguir usar `$sicc-cadastrar-contrato` direto
 
-## O que deixa a instalacao mais robusta
+## O que deixa isso mais confiavel
 
-- `engines.node` exige Node 20+
-- `.nvmrc` fixa a serie recomendada
-- `sicc-codex doctor` checa Node, Codex e MCP antes do uso
-- `setup` reinstala a skill e corrige o bloco do MCP SICC no `config.toml`
+- Node minimo definido no projeto
+- `.nvmrc` pra fixar a versao recomendada
+- `sicc-codex doctor` pra checar ambiente antes de usar
+- `setup` que reinstala a skill e corrige a config do MCP se precisar
