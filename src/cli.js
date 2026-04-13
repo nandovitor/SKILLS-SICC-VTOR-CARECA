@@ -3,7 +3,7 @@ const path = require("node:path");
 const { Command } = require("commander");
 const { runDoctor } = require("./doctor");
 const { installCodexIntegration } = require("./install");
-const { extractTextFromFile } = require("./extractors");
+const { extractTextFromFile, bootstrapPythonExtractors } = require("./extractors");
 const { normalizeContractText, debugContractText } = require("./normalize");
 const { buildDraftPayload, buildFinalPayload } = require("./payload");
 
@@ -44,9 +44,23 @@ async function runCli(argv = process.argv) {
     .option("--codex-home <path>", "Diretorio base do Codex")
     .option("--mcp-url <url>", "URL do MCP do SICC", "https://compras.app.br/mcp/documentos")
     .option("--server-name <name>", "Nome do servidor MCP no config", "sicc")
+    .option("--prepare-python", "Tenta preparar as dependencias Python para extracao robusta")
     .action((options) => {
       const result = installCodexIntegration(options);
       writeJsonOutput(result);
+      if (!result.ok) {
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("bootstrap-python")
+    .description("Instala dependencias Python para extracao mais robusta de PDF/DOC/DOCX.")
+    .option("--python <cmd>", "Comando Python explicito")
+    .option("--output <file>", "Salvar JSON em arquivo")
+    .action((options) => {
+      const result = bootstrapPythonExtractors(options);
+      writeJsonOutput(result, options.output);
       if (!result.ok) {
         process.exitCode = 1;
       }

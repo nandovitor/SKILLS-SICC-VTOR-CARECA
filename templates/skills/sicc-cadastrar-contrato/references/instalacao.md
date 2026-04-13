@@ -34,14 +34,16 @@ nvm use 24
 2. Instalar Node se necessario
 3. Rodar `npx --yes sicc-codex-toolkit@latest setup`
 4. Usar o launcher criado em `CODEX_HOME/bin/sicc-codex.cmd` ou `CODEX_HOME/bin/sicc-codex`
-5. Rodar `sicc-codex doctor`
-6. Reiniciar o Codex se ja estiver aberto
+5. Rodar `sicc-codex bootstrap-python`
+6. Rodar `sicc-codex doctor`
+7. Reiniciar o Codex se ja estiver aberto
 
 ## Validacoes importantes
 
 - `node -v` deve mostrar Node 20+
 - `npm -v` deve responder normalmente
 - `CODEX_HOME/bin/sicc-codex.cmd` ou `CODEX_HOME/bin/sicc-codex` deve existir
+- `sicc-codex bootstrap-python` deve concluir com `ok: true`
 - `sicc-codex doctor` deve retornar `ok: true`
 - `CODEX_HOME/config.toml` deve conter `[mcp_servers.sicc]`
 - `CODEX_HOME/skills/sicc-cadastrar-contrato` deve existir

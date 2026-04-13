@@ -15,7 +15,8 @@
     "bin",
     "src",
     "templates",
-    "README.md"
+    "README.md",
+    "requirements-extractors.txt"
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",

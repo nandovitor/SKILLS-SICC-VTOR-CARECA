@@ -31,6 +31,19 @@ npx --yes sicc-codex-toolkit@latest setup
 
 Isso instala a skill, registra o MCP e cria launchers em `CODEX_HOME/bin` para usar `sicc-codex` sem install global manual.
 
+Para extracao robusta de documentos, especialmente `.pdf` e `.doc`, rode tambem:
+
+```bash
+sicc-codex bootstrap-python
+```
+
+O bootstrap Python instala as libs que o agente pode usar no shell do Codex para extrair melhor:
+
+- `pypdf`
+- `python-docx`
+- `pywin32` no Windows
+- `textract` quando aplicavel
+
 Se estiver no Windows, o caminho mais tranquilo e:
 
 ```bash

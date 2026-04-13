@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { runDoctor } = require("./doctor");
+const { bootstrapPythonExtractors } = require("./extractors");
 
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "skills", "sicc-cadastrar-contrato");
 const MIN_NODE_MAJOR = 20;
@@ -118,6 +119,7 @@ function installCodexIntegration(options = {}) {
   copyDirectory(TEMPLATE_ROOT, skillTargetDir);
   const launchers = ensureToolkitLaunchers(codexHome, packageSpec);
   ensureMcpServerConfig(configPath, options.serverName || "sicc", options.mcpUrl || "https://compras.app.br/mcp/documentos");
+  const pythonBootstrap = options.preparePython ? bootstrapPythonExtractors(options) : null;
   const doctor = runDoctor({ codexHome });
 
   return {
@@ -126,6 +128,7 @@ function installCodexIntegration(options = {}) {
     installedSkill: skillTargetDir,
     updatedConfig: configPath,
     launcher: launchers,
+    pythonBootstrap,
     shellBootstrap: {
       check: [
         "node -v",
@@ -147,12 +150,16 @@ function installCodexIntegration(options = {}) {
         `${launchers.commandPath} doctor`,
         `${launchers.commandPath} draft-payload arquivo.pdf`,
       ],
+      python: [
+        `${launchers.commandPath} bootstrap-python`,
+      ],
     },
     doctor,
     nextSteps: [
       "Reinicie o Codex se ele ja estava aberto.",
       "No shell do Codex em maquina nova, valide `node -v` e `npm -v` antes de usar o toolkit.",
       `Use o launcher em ${launchers.commandPath} para rodar o toolkit sem depender de install global.`,
+      "Para extracao mais robusta de PDF/DOC/DOCX, rode `sicc-codex bootstrap-python`.",
       "Rode `sicc-codex doctor` ou o launcher equivalente para validar Node, Codex e MCP.",
       "Use $sicc-cadastrar-contrato para cadastrar contratos via MCP.",
       "Use `sicc-codex draft-payload arquivo.pdf` para gerar um rascunho antes do cadastro.",

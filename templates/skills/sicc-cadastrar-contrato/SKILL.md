@@ -7,7 +7,7 @@ description: Cadastro de contratos e atas no SICC via MCP, com foco em acertar n
 
 ## Objetivo
 
-Executar o cadastro de contrato no SICC pelo MCP sem instalar dependencias durante a tarefa.
+Executar o cadastro de contrato no SICC pelo MCP com ambiente pronto no shell do Codex e sem depender de install global manual do toolkit.
 
 Se houver PDF, DOCX, TXT ou Markdown, usar primeiro o launcher do toolkit para extrair texto e montar um rascunho de payload com campos detectados e pendencias explicitas.
 
@@ -28,8 +28,9 @@ Antes do primeiro uso em uma maquina nova:
 
 1. Garantir Node.js 20 ou superior.
 2. Rodar `npx --yes sicc-codex-toolkit@latest setup` uma vez para instalar skill, launcher e MCP.
-3. Rodar o launcher `CODEX_HOME/bin/sicc-codex.cmd doctor` ou fallback `npx --yes sicc-codex-toolkit@latest doctor`.
-4. Seguir o fluxo do cadastro.
+3. Rodar `CODEX_HOME/bin/sicc-codex.cmd bootstrap-python` ou fallback `npx --yes sicc-codex-toolkit@latest bootstrap-python`.
+4. Rodar o launcher `CODEX_HOME/bin/sicc-codex.cmd doctor` ou fallback `npx --yes sicc-codex-toolkit@latest doctor`.
+5. Seguir o fluxo do cadastro.
 
 No Windows, a instalacao recomendada do Node e:
 
@@ -75,6 +76,7 @@ Alternativa com `nvm`:
 ## Ferramentas e Comandos
 
 - `npx --yes sicc-codex-toolkit@latest setup`
+- `sicc-codex bootstrap-python`
 - `sicc-codex doctor`
 - `mcp__sicc__get_organizacoes_tool`
 - `mcp__sicc__search_contrato_by_numero_tool`
@@ -89,8 +91,10 @@ Alternativa com `nvm`:
 
 - Nao instalar pacotes para esse fluxo no meio da tarefa.
 - Se o ambiente ainda nao estiver pronto, priorizar `npx --yes sicc-codex-toolkit@latest setup`.
+- Se a maquina ainda nao tiver extratores robustos, priorizar `sicc-codex bootstrap-python`.
 - Se o comando `sicc-codex` nao existir, usar o launcher em `CODEX_HOME/bin` ou fallback `npx --yes sicc-codex-toolkit@latest`.
 - Se `node -v` falhar no shell do Codex, instalar Node antes de qualquer outro passo.
+- Para `.doc`, preferir sempre o extrator Python; o fallback Node sozinho nao e confiavel.
 - Nao inventar IDs; sempre resolver no MCP.
 - Nao deixar `unidades_participantes` vazio.
 - Nao trocar o objeto do documento por resumo generico.
