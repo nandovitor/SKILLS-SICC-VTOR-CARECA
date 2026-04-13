@@ -89,19 +89,19 @@ sicc-codex build-payload --input contrato-normalizado.json
 
 ## Uso em outro computador
 
- instalar direto do GitHub:
+Enquanto o pacote nao estiver publicado no npm, voce pode instalar direto do GitHub:
 
 ```bash
 npx github:nandovitor/SKILLS-SICC-VTOR-CARECA setup
 ```
 
-Depois que eu publcar no NPM fica assim
+Depois de publicar no npm, o ideal fica:
 
 ```bash
 npx sicc-codex-toolkit setup
 ```
 
-## Espero que fiique assim
+## Resultado esperado
 
 Depois do `setup`:
 
